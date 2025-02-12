@@ -15,6 +15,7 @@ def install_package(package):
 
 install_package("sunpy")
 install_package("astropy")
+install_package("matplotlib")
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 
