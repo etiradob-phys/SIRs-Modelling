@@ -191,5 +191,20 @@ phi_fast = (omega_sun * (r0_fast - r_min) / v_sw_fast_AU)
 x_array_slow_t0 = (r0_slow * np.cos(phi_slow))
 y_array_slow_t0 = (r0_slow * np.sin(phi_slow))
 
+# Rotate the spiral by an angle in degrees counterclockwise
+
+angle2Earth = input("Enter the angle to Earth: ")
+
+angle2Earth = (angle2Earth) * (-1)
+angle = (angle2Earth + 90)
+
+theta_angle = (angle) * (np.pi / 180)
+
+x_array_slow_t0_new = (y_array_slow_t0 * np.cos(theta_angle) - x_array_slow_t0 * np.sin(theta_angle))
+y_array_slow_t0_new = (y_array_slow_t0 * np.sin(theta_angle) + x_array_slow_t0 * np.cos(theta_angle))
+
+x_array_fast_t0_new = (y_array_fast_t0 * np.cos(theta_angle) - x_array_fast_t0 * np.sin(theta_angle))
+y_array_fast_t0_new = (y_array_fast_t0 * np.sin(theta_angle) + x_array_fast_t0 * np.cos(theta_angle))
+
 x_array_fast_t0 = (r0_fast * np.cos(phi_fast))
 y_array_fast_t0 = (r0_fast * np.sin(phi_fast))
