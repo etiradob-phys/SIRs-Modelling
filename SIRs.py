@@ -208,3 +208,51 @@ y_array_fast_t0_new = (y_array_fast_t0 * np.sin(theta_angle) + x_array_fast_t0 *
 
 x_array_fast_t0 = (r0_fast * np.cos(phi_fast))
 y_array_fast_t0 = (r0_fast * np.sin(phi_fast))
+
+# Define rotation angles (in radians)
+
+theta_values = np.arange(0, 365, 5) * (np.pi / 180)
+
+spiral_line_slow, = ax.plot([], [], color='deepskyblue')
+scatter_points_slow = ax.scatter([], [], s=7, zorder=1, color='skyblue', marker=".")
+
+spiral_line_fast, = ax.plot([], [], color='deepskyblue')
+scatter_points_fast = ax.scatter([], [], s=7, zorder=1, color='deepskyblue', marker=".")
+
+# Create a text element for the timestamp
+time_text = ax.text(0.5, -2.0, '', color='black', fontsize=12, bbox=dict(facecolor='white', alpha=0.8))
+
+# Update function for animation
+def update(frame):
+    theta = theta_values[frame]
+
+    # Growing factor (gradually increases from 0 to 1)
+
+    scale_ani = frame / len(theta_values)
+
+    # Rotate the spiral
+    x_rot_slow = (scale_ani * (x_array_slow_t0_new * np.cos(theta) - y_array_slow_t0_new * np.sin(theta)))
+    y_rot_slow = (scale_ani * (x_array_slow_t0_new * np.sin(theta) + y_array_slow_t0_new * np.cos(theta)))
+
+    x_rot_fast = (scale_ani * (x_array_fast_t0_new * np.cos(theta) - y_array_fast_t0_new * np.sin(theta)))
+    y_rot_fast = (scale_ani * (x_array_fast_t0_new * np.sin(theta) + y_array_fast_t0_new * np.cos(theta)))
+
+    # Update the scatter points
+    scatter_points_slow.set_offsets(np.column_stack((-y_rot_slow, -x_rot_slow)))
+    scatter_points_fast.set_offsets(np.column_stack((-y_rot_fast, -x_rot_fast)))
+
+    # Update spiral line (plot slow spiral first, then fast)
+    spiral_line_slow.set_data(-y_rot_slow, -x_rot_slow)  # Slow spiral on top
+    spiral_line_fast.set_data(-y_rot_fast, -x_rot_fast)  # Fast spiral at the bottom
+
+    # Compute and update time
+    time_offset = 3.8555555555555543
+    current_time = obstime + frame * time_offset * u.hour
+    time_text.set_text(current_time.strftime('%d-%b-%Y %H:%M UT'))
+
+    return spiral_line_slow, scatter_points_slow, spiral_line_fast, scatter_points_fast, time_text
+
+# Create animation
+ani = FuncAnimation(fig, update, frames=len(theta_values), interval=100, blit=True)
+
+plt.show()
