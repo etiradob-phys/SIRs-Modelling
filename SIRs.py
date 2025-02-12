@@ -193,9 +193,7 @@ y_array_slow_t0 = (r0_slow * np.sin(phi_slow))
 
 # Rotate the spiral by an angle in degrees counterclockwise
 
-angle2Earth = input("Enter the angle to Earth: ")
-
-angle2Earth = (angle2Earth) * (-1)
+angle2Earth = (46) * (-1)
 angle = (angle2Earth + 90)
 
 theta_angle = (angle) * (np.pi / 180)
