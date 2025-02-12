@@ -207,9 +207,6 @@ y_array_slow_t0_new = (y_array_slow_t0 * np.sin(theta_angle) + x_array_slow_t0 *
 x_array_fast_t0_new = (y_array_fast_t0 * np.cos(theta_angle) - x_array_fast_t0 * np.sin(theta_angle))
 y_array_fast_t0_new = (y_array_fast_t0 * np.sin(theta_angle) + x_array_fast_t0 * np.cos(theta_angle))
 
-x_array_fast_t0 = (r0_fast * np.cos(phi_fast))
-y_array_fast_t0 = (r0_fast * np.sin(phi_fast))
-
 # Define rotation angles (in radians)
 
 theta_values = np.arange(0, 365, 5) * (np.pi / 180)
