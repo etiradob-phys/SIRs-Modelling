@@ -33,7 +33,16 @@ from sunpy.time import parse_time
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 
-obstime = parse_time('2008-JAN-23 16:39:33')
+year = input("Enter the year: ")
+month = input("Enter the month (e.g., JAN): ")
+day = input("Enter the day: ")
+hour = input("Enter the hour (24-hour format): ")
+minute = input("Enter the minute: ")
+second = input("Enter the second: ")
+
+time_str = f"{year}-{month}-{day} {hour}:{minute}:{second}"
+
+obstime = parse_time(time_str)
 
 hee_frame = HeliocentricEarthEcliptic(obstime=obstime)
 
@@ -149,7 +158,37 @@ angle_labels[0].set_visible(False)
 
 ax_polar.set_rgrids([])  # Hides the radial grid lines (circles)
 
-plt.show()
+#plt.show()
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 # --------------------------------------------------------------------------------------------------------------------------------------
+
+T_sun = 25.38 * 24 * 3600                                                        # Solar rotation period in seconds
+omega_sun = 2 * np.pi / T_sun                                                    # Solar angular speed in rad/s
+
+r_min = 0.0                                                                      # Minimum radial distance in AU
+r_max = 2.5                                                                      # Maximum radial distance in AU
+n_points = 50                                                                    # Number of points for the spiral
+
+#v_sw = [400]                                                                    # Solar wind speeds in km/s
+#v_sw_AU = v_sw[0]  / 1.496e8
+
+v_sw_slow = 294                                                                  
+v_sw_fast = (v_sw_slow + 400)                                                    
+
+v_sw_slow_AU = v_sw_slow / 1.496e8
+v_sw_fast_AU = v_sw_fast / 1.496e8
+
+r0_slow = (np.linspace(r_min, r_max, n_points))                                   # Generate radial distances
+r0_fast = (np.linspace(r_min, r_max, n_points))
+
+phi_slow = (omega_sun * (r0_slow - r_min) / v_sw_slow_AU)
+phi_fast = (omega_sun * (r0_fast - r_min) / v_sw_fast_AU)
+
+# Initial positions of points on the spiral
+
+x_array_slow_t0 = (r0_slow * np.cos(phi_slow))
+y_array_slow_t0 = (r0_slow * np.sin(phi_slow))
+
+x_array_fast_t0 = (r0_fast * np.cos(phi_fast))
+y_array_fast_t0 = (r0_fast * np.sin(phi_fast))
