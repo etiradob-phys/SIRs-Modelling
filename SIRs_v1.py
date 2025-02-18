@@ -160,3 +160,5 @@ angle_labels[0].set_visible(False)
 ax_polar.set_rgrids([])  # Hides the radial grid lines (circles)
 
 plt.show()
+
+# --------------------------------------------------------------------------------------------------------------------------------------
