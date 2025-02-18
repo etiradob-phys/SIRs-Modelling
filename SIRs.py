@@ -258,7 +258,4 @@ def update(frame):
 # Create animation
 ani = FuncAnimation(fig, update, frames=len(theta_values), interval=100, blit=True)
 
-# Save the animation as HTML
-ani_html = HTML(ani.to_jshtml())
-
 plt.show()
