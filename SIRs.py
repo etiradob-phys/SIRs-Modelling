@@ -1,5 +1,5 @@
 # Author: E. Tirado-Bueno (etirado@inaoe.mx)
-# Last Update: 12 / 02 / 2025
+# Last Update: 17 / 02 / 2025
 # --------------------------------------------------------------------------------------------------------------------------------------
 import subprocess
 import sys
@@ -209,7 +209,7 @@ y_array_fast_t0_new = (y_array_fast_t0 * np.sin(theta_angle) + x_array_fast_t0 *
 
 # Define rotation angles (in radians)
 
-theta_values = np.arange(0, 365, 5) * (np.pi / 180)
+theta_values = np.arange(0, 361, 1) * (np.pi / 180)
 
 spiral_line_slow, = ax.plot([], [], color='deepskyblue')
 scatter_points_slow = ax.scatter([], [], s=7, zorder=1, color='skyblue', marker=".")
@@ -226,9 +226,12 @@ def update(frame):
 
     # Growing factor (gradually increases from 0 to 1)
 
-    scale_ani = frame / len(theta_values)
+    scale_ani = 1#frame / len(theta_values)
 
     # Rotate the spiral
+#    y_rot = x_array_t0_new * np.cos(theta) - y_array_t0_new * np.sin(theta)
+#    x_rot = x_array_t0_new * np.sin(theta) + y_array_t0_new * np.cos(theta)
+
     x_rot_slow = (scale_ani * (x_array_slow_t0_new * np.cos(theta) - y_array_slow_t0_new * np.sin(theta)))
     y_rot_slow = (scale_ani * (x_array_slow_t0_new * np.sin(theta) + y_array_slow_t0_new * np.cos(theta)))
 
@@ -237,14 +240,16 @@ def update(frame):
 
     # Update the scatter points
     scatter_points_slow.set_offsets(np.column_stack((-y_rot_slow, -x_rot_slow)))
+ #   scatter_points.set_offsets(np.column_stack((x_rot, y_rot)))
     scatter_points_fast.set_offsets(np.column_stack((-y_rot_fast, -x_rot_fast)))
 
     # Update spiral line (plot slow spiral first, then fast)
     spiral_line_slow.set_data(-y_rot_slow, -x_rot_slow)  # Slow spiral on top
+ #   spiral_line.set_data(x_rot, y_rot)  # Average spiral in the middle
     spiral_line_fast.set_data(-y_rot_fast, -x_rot_fast)  # Fast spiral at the bottom
 
     # Compute and update time
-    time_offset = 3.8555555555555543
+    time_offset = 1.927
     current_time = obstime + frame * time_offset * u.hour
     time_text.set_text(current_time.strftime('%d-%b-%Y %H:%M UT'))
 
@@ -252,5 +257,8 @@ def update(frame):
 
 # Create animation
 ani = FuncAnimation(fig, update, frames=len(theta_values), interval=100, blit=True)
+
+# Save the animation as HTML
+ani_html = HTML(ani.to_jshtml())
 
 plt.show()
