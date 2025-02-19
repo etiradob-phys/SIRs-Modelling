@@ -1,5 +1,5 @@
 # Author: E. Tirado-Bueno (etirado@inaoe.mx)
-# Last Update: 17 / 02 / 2025
+# Last Update: 18 / 02 / 2025
 # --------------------------------------------------------------------------------------------------------------------------------------
 import subprocess
 import sys
@@ -159,6 +159,30 @@ angle_labels[0].set_visible(False)
 
 ax_polar.set_rgrids([])  # Hides the radial grid lines (circles)
 
-plt.show()
-
 # --------------------------------------------------------------------------------------------------------------------------------------
+
+from datetime import datetime, timedelta
+from matplotlib.dates import DateFormatter, date2num, num2date
+
+# Define a function to map Y (HEE-X) values to time:
+
+def heex_to_time(heex):
+    """Convert HEE-X values to corresponding time with 1-second resolution."""
+    # Reference time at HEE-X = 0
+    ref_time = obstime.datetime  
+
+    # Assuming a linear mapping: 1 AU shift = 1 second (adjust if necessary)
+    new_time = ref_time + timedelta(seconds=heex * 1)  
+    return date2num(new_time)  # Convert to Matplotlib date format
+
+def time_to_heex(t):
+    """Convert time back to HEE-X values."""
+    ref_time = obstime.datetime
+    return (num2date(t) - ref_time).total_seconds()
+
+# Add the secondary Y-axis
+secay = ax.secondary_yaxis('right', functions=(heex_to_time, time_to_heex))
+secay.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+secay.set_ylabel("Time (UT)")
+
+plt.show()
