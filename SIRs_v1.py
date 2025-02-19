@@ -165,11 +165,12 @@ ax_polar.set_rgrids([])  # Hides the radial grid lines (circles)
 from scipy.interpolate import interp1d
 from matplotlib.dates import DateFormatter, date2num, num2date
 
-# Get Earth's actual positions in HEE-X and corresponding times
-earth_x, _ = coord_to_heexy(planet_coords['Earth'])
-earth_times = date2num(times.datetime)  # Convert obstime array to Matplotlib date numbers
+# Get Earth's trajectory in HEE coordinates after filtering
+earth_coords = planet_coords['Earth']
+earth_x, _ = coord_to_heexy(earth_coords)  # Ensure both are same length
+earth_times = date2num(times[:len(earth_x)].datetime)  # Match the length of x-coordinates
 
-# Create an interpolation function to map HEE-X to time
+# Interpolation functions
 heex_to_time_interp = interp1d(earth_x, earth_times, kind='cubic', fill_value="extrapolate")
 
 def heex_to_time(heex):
@@ -181,10 +182,12 @@ def time_to_heex(t):
     time_to_heex_interp = interp1d(earth_times, earth_x, kind='cubic', fill_value="extrapolate")
     return time_to_heex_interp(t)
 
-# Add the secondary Y-axis for time
+# Add secondary Y-axis for time
 secay = ax.secondary_yaxis('right', functions=(heex_to_time, time_to_heex))
 secay.yaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
 secay.set_ylabel("Time (UT)")
+
+
 
 
 plt.show()
