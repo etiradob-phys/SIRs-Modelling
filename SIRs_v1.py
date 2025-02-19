@@ -16,6 +16,7 @@ def install_package(package):
 install_package("sunpy")
 install_package("astropy")
 install_package("matplotlib")
+install_package("scipy")
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 
@@ -161,28 +162,29 @@ ax_polar.set_rgrids([])  # Hides the radial grid lines (circles)
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 
-from datetime import datetime, timedelta
+from scipy.interpolate import interp1d
 from matplotlib.dates import DateFormatter, date2num, num2date
 
-# Define a function to map Y (HEE-X) values to time:
+# Get Earth's actual positions in HEE-X and corresponding times
+earth_x, _ = coord_to_heexy(planet_coords['Earth'])
+earth_times = date2num(times.datetime)  # Convert obstime array to Matplotlib date numbers
+
+# Create an interpolation function to map HEE-X to time
+heex_to_time_interp = interp1d(earth_x, earth_times, kind='cubic', fill_value="extrapolate")
 
 def heex_to_time(heex):
-    """Convert HEE-X values to corresponding time with 1-second resolution."""
-    # Reference time at HEE-X = 0
-    ref_time = obstime.datetime  
-
-    # Assuming a linear mapping: 1 AU shift = 1 second (adjust if necessary)
-    new_time = ref_time + timedelta(seconds=heex * 1)  
-    return date2num(new_time)  # Convert to Matplotlib date format
+    """Convert HEE-X to time using real orbital data."""
+    return heex_to_time_interp(heex)
 
 def time_to_heex(t):
-    """Convert time back to HEE-X values."""
-    ref_time = obstime.datetime
-    return (num2date(t) - ref_time).total_seconds()
+    """Convert time back to HEE-X using inverse interpolation."""
+    time_to_heex_interp = interp1d(earth_times, earth_x, kind='cubic', fill_value="extrapolate")
+    return time_to_heex_interp(t)
 
-# Add the secondary Y-axis
+# Add the secondary Y-axis for time
 secay = ax.secondary_yaxis('right', functions=(heex_to_time, time_to_heex))
-secay.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+secay.yaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
 secay.set_ylabel("Time (UT)")
+
 
 plt.show()
