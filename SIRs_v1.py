@@ -155,40 +155,29 @@ ax_polar.patch.set_alpha(0.0)
 # Get the current theta tick labels:
 angle_labels = ax_polar.get_xticklabels()
 
-# Hide the 0º label (first label in the list):
+# Hide the 0° label (first label in the list):
 angle_labels[0].set_visible(False)
 
 ax_polar.set_rgrids([])  # Hides the radial grid lines (circles)
 
-# --------------------------------------------------------------------------------------------------------------------------------------
-# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% REVIEW %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-from scipy.interpolate import interp1d
-from matplotlib.dates import DateFormatter, date2num, num2date
-
-# Get Earth's trajectory in HEE coordinates after filtering
-earth_coords = planet_coords['Earth']
-earth_x, _ = coord_to_heexy(earth_coords)  # Ensure both are same length
-earth_times = date2num(times[:len(earth_x)].datetime)  # Match the length of x-coordinates
-
-# Interpolation functions
-heex_to_time_interp = interp1d(earth_x, earth_times, kind='cubic', fill_value="extrapolate")
-
-def heex_to_time(heex):
-    """Convert HEE-X to time using real orbital data."""
-    return heex_to_time_interp(heex)
-
-def time_to_heex(t):
-    """Convert time back to HEE-X using inverse interpolation."""
-    time_to_heex_interp = interp1d(earth_times, earth_x, kind='cubic', fill_value="extrapolate")
-    return time_to_heex_interp(t)
-
-# Add secondary Y-axis for time
-secay = ax.secondary_yaxis('right', functions=(heex_to_time, time_to_heex))
-secay.yaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
-secay.set_ylabel("Time (UT)")
-
-
-
-
 plt.show()
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+interval_seconds = 27 * 24 * 3600
+
+num_points = 1000
+
+# Generar valores de Y como una secuencia de tiempo en segundos
+y_values = np.linspace(0, interval_seconds, num_points)
+
+# Calcular las fechas correspondientes sumando los segundos a obstime
+dates = [obstime + (y * u.s) for y in y_values]
+
+# Convertir fechas a string para imprimir
+date_strings = [t.datetime.strftime('%d-%b-%Y %H:%M:%S') for t in dates]
+
+# Imprimir la correspondencia
+print("Valores del eje Y y sus fechas correspondientes:")
+for y, date in zip(y_values, date_strings):
+    print(f"Y: {y:.0f} sec  →  Fecha: {date}")
