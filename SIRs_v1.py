@@ -164,7 +164,7 @@ plt.show()
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 
-# Parameters
+# Parameters:
 
 T_sun = 25.38 * 24 * 3600
 omega_sun = 2 * np.pi / T_sun
@@ -184,5 +184,112 @@ r0 = (np.linspace(r_min, r_max, n_points))
 phi_slow = (omega_sun * (r0 - r_min) / v_sw_fast_AU)
 phi_fast = (omega_sun * (r0 - r_min) / v_sw_slow_AU)
 
+# Initial positions of points on the spiral:
+
+x_array_slow_t0 = (r0 * np.cos(phi_slow))
+y_array_slow_t0 = (r0 * np.sin(phi_slow))
+
+x_array_fast_t0 = (r0 * np.cos(phi_fast))
+y_array_fast_t0 = (r0 * np.sin(phi_fast))
+
+# Rotate the spiral by an angle in degrees:
+
+angle2Earth = (46) * (-1)
+angle = (angle2Earth + 90)
+
+theta_angle = (angle) * (np.pi / 180)
+
+x_array_slow_t0_new = (y_array_slow_t0 * np.cos(theta_angle) - x_array_slow_t0 * np.sin(theta_angle))
+y_array_slow_t0_new = (y_array_slow_t0 * np.sin(theta_angle) + x_array_slow_t0 * np.cos(theta_angle))
+
+x_array_fast_t0_new = (y_array_fast_t0 * np.cos(theta_angle) - x_array_fast_t0 * np.sin(theta_angle))
+y_array_fast_t0_new = (y_array_fast_t0 * np.sin(theta_angle) + x_array_fast_t0 * np.cos(theta_angle))
+
+# Define rotation angles (in radians):
+
+theta_values = np.arange(0, 360, 1) * (np.pi / 180)
+
+spiral_line_slow, = ax.plot([], [], color='deepskyblue')
+scatter_points_slow = ax.scatter([], [], s=7, zorder=1, color='skyblue', marker=".")
+
+spiral_line_fast, = ax.plot([], [], color='deepskyblue')
+scatter_points_fast = ax.scatter([], [], s=7, zorder=1, color='deepskyblue', marker=".")
+
+# Create a text element for the timestamp:
+time_text = ax.text(0.5, -2.0, '', color='black', fontsize=12, bbox=dict(facecolor='white', alpha=0.8))
+
+previous_frame = -1
+
+# Initialize (overwrite) the file at the start
+with open('spiral_data.txt', 'w') as file:
+    file.write("Spiral Data Log\n\n")
+
+# Update function for animation
+def update(frame):
+    global previous_frame
+
+    # If the frame is the same as the previous one, don't print:
+    if frame == previous_frame:
+        return spiral_line_slow, scatter_points_slow, spiral_line_fast, scatter_points_fast, time_text
+
+    # Update previous frame to the current one:
+    previous_frame = frame
+
+    theta = theta_values[frame]
+
+    # Growing factor (gradually increases from 0 to 1)
+
+    scale_ani = 1#frame / len(theta_values)
+
+    # Rotate the spiral:
+
+    x_rot_slow = (scale_ani * (x_array_slow_t0_new * np.cos(theta) - y_array_slow_t0_new * np.sin(theta)))
+    y_rot_slow = (scale_ani * (x_array_slow_t0_new * np.sin(theta) + y_array_slow_t0_new * np.cos(theta)))
+
+    x_rot_fast = (scale_ani * (x_array_fast_t0_new * np.cos(theta) - y_array_fast_t0_new * np.sin(theta)))
+    y_rot_fast = (scale_ani * (x_array_fast_t0_new * np.sin(theta) + y_array_fast_t0_new * np.cos(theta)))
+
+    x_rot_slow = (x_rot_slow) * (-1)
+    y_rot_slow = (y_rot_slow) * (-1)
+
+    x_rot_fast = (x_rot_fast) * (-1)
+    y_rot_fast = (y_rot_fast) * (-1)
+
+    distances_slow = np.sqrt((x_rot_slow - 1)**2 + (y_rot_slow)**2)
+    distances_fast = np.sqrt((x_rot_fast - 1)**2 + (y_rot_fast)**2)
+
+    # Update the scatter points:
+    scatter_points_slow.set_offsets(np.column_stack((y_rot_slow, x_rot_slow)))
+    scatter_points_fast.set_offsets(np.column_stack((y_rot_fast, x_rot_fast)))
+
+    # Update spiral line (plot slow spiral first, then fast)
+    spiral_line_slow.set_data(y_rot_slow, x_rot_slow)
+    spiral_line_fast.set_data(y_rot_fast, x_rot_fast) 
+
+    # Compute and update time
+    time_offset = 1.927
+    current_time = obstime + frame * time_offset * u.hour
+    time_text.set_text(current_time.strftime('%d-%b-%Y %H:%M UT'))
+    current_date_str = current_time.strftime('%d-%b-%Y %H:%M UT')
+
+    # Print the (x, y) coordinates and distances for each point as it rotates:
+#    print(f"Frame {frame} - Date: {current_date_str}:")
+#    for x_s, y_s, d_s in zip(y_rot_slow, x_rot_slow, distances_slow):
+#        print(f"Slow Spiral - x: {x_s:.3f}, y: {y_s:.3f}, Distance to Earth [AU]: {d_s:.3f}")
+#    for x_f, y_f, d_f in zip(y_rot_fast, x_rot_fast, distances_fast):
+#        print(f"Fast Spiral - x: {x_f:.3f}, y: {y_f:.3f}, Distance to Earth [AU]: {d_f:.3f}")
+
+    # Save (x_f, y_f, d_f) to a text file (overwritten at the start of the animation)
+    with open('spiral_data.txt', 'a') as file:
+        file.write(f"Frame {frame} - Date: {current_date_str}:\n")
+        for x_f, y_f, d_f in zip(y_rot_fast, x_rot_fast, distances_fast):
+            file.write(f"Slow Spiral - x: {x_f:.3f}, y: {y_f:.3f}, Distance to Earth [AU]: {d_f:.3f}\n")
+        file.write("\n")  # Add a newline for better readability
 
 
+    return spiral_line_slow, scatter_points_slow, spiral_line_fast, scatter_points_fast, time_text
+
+# Create animation
+ani = FuncAnimation(fig, update, frames=len(theta_values), interval=100, blit=True)
+
+plt.show()
