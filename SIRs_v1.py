@@ -283,7 +283,7 @@ def update(frame):
     with open('spiral_data.txt', 'a') as file:
         file.write(f"Frame {frame} - Date: {current_date_str}:\n")
         for x_f, y_f, d_f in zip(y_rot_fast, x_rot_fast, distances_fast):
-            file.write(f"Slow Spiral - x: {x_f:.3f}, y: {y_f:.3f}, Distance to Earth [AU]: {d_f:.3f}\n")
+            file.write(f"Fast Spiral - x: {x_f:.3f}, y: {y_f:.3f}, Distance to Earth [AU]: {d_f:.3f}\n")
         file.write("\n")  # Add a newline for better readability
 
 
