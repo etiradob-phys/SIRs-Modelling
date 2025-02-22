@@ -164,20 +164,25 @@ plt.show()
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 
-interval_seconds = 27 * 24 * 3600
+# Parameters
 
-num_points = 1000
+T_sun = 25.38 * 24 * 3600
+omega_sun = 2 * np.pi / T_sun
 
-# Generar valores de Y como una secuencia de tiempo en segundos
-y_values = np.linspace(0, interval_seconds, num_points)
+r_min = 0.3
+r_max = 2.5
+n_points = 50
 
-# Calcular las fechas correspondientes sumando los segundos a obstime
-dates = [obstime + (y * u.s) for y in y_values]
+v_sw_slow = 294
+v_sw_fast = (v_sw_slow + 400)
 
-# Convertir fechas a string para imprimir
-date_strings = [t.datetime.strftime('%d-%b-%Y %H:%M:%S') for t in dates]
+v_sw_slow_AU = v_sw_slow / 1.496e8
+v_sw_fast_AU = v_sw_fast / 1.496e8
 
-# Imprimir la correspondencia
-print("Valores del eje Y y sus fechas correspondientes:")
-for y, date in zip(y_values, date_strings):
-    print(f"Y: {y:.0f} sec  →  Fecha: {date}")
+r0 = (np.linspace(r_min, r_max, n_points))
+
+phi_slow = (omega_sun * (r0 - r_min) / v_sw_fast_AU)
+phi_fast = (omega_sun * (r0 - r_min) / v_sw_slow_AU)
+
+
+
