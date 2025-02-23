@@ -229,9 +229,6 @@ def update(frame):
     scale_ani = 1#frame / len(theta_values)
 
     # Rotate the spiral
-#    y_rot = x_array_t0_new * np.cos(theta) - y_array_t0_new * np.sin(theta)
-#    x_rot = x_array_t0_new * np.sin(theta) + y_array_t0_new * np.cos(theta)
-
     x_rot_slow = (scale_ani * (x_array_slow_t0_new * np.cos(theta) - y_array_slow_t0_new * np.sin(theta)))
     y_rot_slow = (scale_ani * (x_array_slow_t0_new * np.sin(theta) + y_array_slow_t0_new * np.cos(theta)))
 
@@ -240,12 +237,10 @@ def update(frame):
 
     # Update the scatter points
     scatter_points_slow.set_offsets(np.column_stack((-y_rot_slow, -x_rot_slow)))
- #   scatter_points.set_offsets(np.column_stack((x_rot, y_rot)))
     scatter_points_fast.set_offsets(np.column_stack((-y_rot_fast, -x_rot_fast)))
 
     # Update spiral line (plot slow spiral first, then fast)
     spiral_line_slow.set_data(-y_rot_slow, -x_rot_slow)  # Slow spiral on top
- #   spiral_line.set_data(x_rot, y_rot)  # Average spiral in the middle
     spiral_line_fast.set_data(-y_rot_fast, -x_rot_fast)  # Fast spiral at the bottom
 
     # Compute and update time
