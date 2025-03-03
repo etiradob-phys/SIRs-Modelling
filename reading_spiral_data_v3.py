@@ -3,6 +3,9 @@
 # --------------------------------------------------------------------------------------------------------------------------------------
 
 import tkinter as tk
+import pandas as pd
+import re
+
 from tkinter import filedialog
 
 root = tk.Tk()
@@ -13,3 +16,4 @@ filename = filedialog.askopenfilename()  # Abre un cuadro de diálogo para selec
 print(f"Archivo seleccionado: {filename}")
 
 # --------------------------------------------------------------------------------------------------------------------------------------
+
