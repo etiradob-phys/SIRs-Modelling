@@ -99,3 +99,5 @@ df = df.drop(columns=['Year_Time', 'Time','Date'])
 
 # Mostrar el DataFrame
 print(df)
+
+df.to_csv(f'/Users/eduardotiradobueno/Downloads/simulated_distances.txt', header=True, index=None, sep='\t', mode='w')
