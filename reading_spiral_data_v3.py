@@ -72,5 +72,21 @@ renglones_a_extraer = [15, 20, 25, 30, 35, 40, 45]  # Renglones de interés
 # Ejecutar función
 df = extraer_renglones_y_fechas(filename, renglones_a_extraer)
 
+# Month mapping dictionary
+month_map = {
+    'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04', 'May': '05', 'Jun': '06',
+    'Jul': '07', 'Aug': '08', 'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12'
+}
+
+# Function to convert month name to number
+def convert_month(date_str):
+    # Extract month abbreviation and map to number
+    month_abbr = date_str.split('-')[1]
+    month_num = month_map.get(month_abbr, month_abbr)
+    return date_str.replace(month_abbr, month_num)
+
+# Apply the conversion to the Date column
+df["Date"] = df["Date"].apply(convert_month)
+
 # Mostrar el DataFrame
 print(df)
