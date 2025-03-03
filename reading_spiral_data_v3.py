@@ -32,7 +32,7 @@ def extraer_renglones_y_fechas(archivo, renglones_objetivo):
   for line in lines:
     # Detecta el inicio de un frame y extrae la fecha
     if line.startswith("Frame"):
-      fecha_actual = line.split("Date")[1].split("UT:)[0].strip()
+      fecha_actual = line.split("Date")[1].split("UT:")[0].strip()
 
       if frame_lines:
           valores = [fecha_actual]
