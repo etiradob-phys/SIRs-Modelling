@@ -72,5 +72,7 @@ renglones_a_extraer = [15, 20, 25, 30, 35, 40, 45]  # Renglones de interés
 # Ejecutar función
 df = extraer_renglones_y_fechas(filename, renglones_a_extraer)
 
+df["Date"] = pd.to_datetime(df["Date"])
+
 # Mostrar el DataFrame
 print(df)
