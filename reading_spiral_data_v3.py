@@ -5,6 +5,8 @@
 import tkinter as tk
 import pandas as pd
 import re
+
+from datetime import datetime
 from tkinter import filedialog
 
 # Ocultar la ventana de Tkinter
@@ -87,6 +89,13 @@ def convert_month(date_str):
 
 # Apply the conversion to the Date column
 df["Date"] = df["Date"].apply(convert_month)
+
+df[['Day', 'Month', 'Year_Time']] = df['Date'].str.split('-', expand=True)
+df[['Year', 'Time']] = df['Year_Time'].str.split(' ', expand=True)
+df[['Hour', 'Minute']] = df['Time'].str.split(':', expand=True)
+
+# Drop the intermediate 'Year_Time' and 'Time' columns
+df = df.drop(columns=['Year_Time', 'Time','Date'])
 
 # Mostrar el DataFrame
 print(df)
