@@ -68,5 +68,5 @@ def extraer_renglones_y_fechas(archivo, renglones_objetivo):
     return df
 
 # Configuración
-nombre_archivo = list(filename.keys())[0]  # Obtiene el nombre del archivo subido
+nombre_archivo = filename 
 renglones_a_extraer = [16,21,26,31,36,41,46]  # Lista de renglones que queremos extraer
