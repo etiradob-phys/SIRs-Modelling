@@ -70,3 +70,6 @@ def extraer_renglones_y_fechas(archivo, renglones_objetivo):
 # Configuración
 nombre_archivo = filename 
 renglones_a_extraer = [16,21,26,31,36,41,46]  # Lista de renglones que queremos extraer
+
+# Ejecutar función
+df = extraer_renglones_y_fechas(nombre_archivo, renglones_a_extraer)
