@@ -97,6 +97,14 @@ df[['Hour', 'Minute']] = df['Time'].str.split(':', expand=True)
 # Drop the intermediate 'Year_Time' and 'Time' columns
 df = df.drop(columns=['Year_Time', 'Time','Date'])
 
+df["Day"] = df["Day"].str.replace(":", "", regex=True)
+
+# Convert 'Day', 'Month', 'Year', 'Hour', and 'Minute' into a datetime column
+df["Datetime"] = pd.to_datetime(df[["Year", "Month", "Day", "Hour", "Minute"]])
+
+# Set 'Datetime' as the index
+df = df.set_index("Datetime")
+
 # Mostrar el DataFrame
 print(df)
 
