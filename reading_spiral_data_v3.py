@@ -60,7 +60,7 @@ def extraer_renglones_y_fechas(archivo, renglones_objetivo):
                 valores.append(match.group(1) if match else None)
             else:
                 valores.append(None)
-       resultados.append(valores)
+        resultados.append(valores)
 
     # Crear el DataFrame con múltiples columnas para los diferentes renglones
     columnas = ["Date"] + [f"Distance_Row_{r}" for r in renglones_objetivo]
