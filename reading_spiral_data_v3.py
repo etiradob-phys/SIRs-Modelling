@@ -73,3 +73,5 @@ renglones_a_extraer = [16,21,26,31,36,41,46]  # Lista de renglones que queremos 
 
 # Ejecutar función
 df = extraer_renglones_y_fechas(nombre_archivo, renglones_a_extraer)
+
+print(df)
