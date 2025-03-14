@@ -133,34 +133,34 @@ ax.plot([0,stb_y], [0,stb_x], linestyle='dotted', color='blue')
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 
-# Create a polar overlay sharing the same origin as the Cartesian plot:
-ax_polar = fig.add_subplot(111, polar=True, label='polar', frame_on=False)
+## Create a polar overlay sharing the same origin as the Cartesian plot:
+#ax_polar = fig.add_subplot(111, polar=True, label='polar', frame_on=False)
 
-# Set the radial limit to match the Cartesian plot's limits:
-ax_polar.set_ylim(0, 2.15)  # Match with the Cartesian x and y limits
+## Set the radial limit to match the Cartesian plot's limits:
+#ax_polar.set_ylim(0, 2.15)  # Match with the Cartesian x and y limits
 
-# Align zero angle with the positive X-axis (HEE system):
-ax_polar.set_theta_zero_location('S')                           
-ax_polar.set_theta_direction(-1) 
+## Align zero angle with the positive X-axis (HEE system):
+#ax_polar.set_theta_zero_location('S')                           
+#ax_polar.set_theta_direction(-1) 
 
-# Customize polar grid for better visibility:
-ax_polar.grid(color='gray', linestyle='dotted', alpha=0.7)
+## Customize polar grid for better visibility:
+#ax_polar.grid(color='gray', linestyle='dotted', alpha=0.7)
 
-# Hide radial labels to avoid clutter:
-ax_polar.set_yticklabels([])
+## Hide radial labels to avoid clutter:
+#ax_polar.set_yticklabels([])
 
-# Make the polar grid transparent to overlay nicely:
-ax_polar.patch.set_alpha(0.0)
+## Make the polar grid transparent to overlay nicely:
+#ax_polar.patch.set_alpha(0.0)
 
-# Get the current theta tick labels:
-angle_labels = ax_polar.get_xticklabels()
+## Get the current theta tick labels:
+#angle_labels = ax_polar.get_xticklabels()
 
-# Hide the 0° label (first label in the list):
-angle_labels[0].set_visible(False)
+## Hide the 0° label (first label in the list):
+#angle_labels[0].set_visible(False)
 
-ax_polar.set_rgrids([])  # Hides the radial grid lines (circles)
+#ax_polar.set_rgrids([])  # Hides the radial grid lines (circles)
 
-plt.show()
+#plt.show()
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 
